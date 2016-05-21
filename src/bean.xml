@@ -1,0 +1,36 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-2.5.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx.xsd 
+						http://www.springframework.org/schema/task  
+						http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+<bean id="audience" class="com.spring.test.aop.Audience"/>
+    
+    <bean id="sax" class="com.spring.test.setter.Saxophone"/>
+    <bean id="kenny" class="com.spring.test.setter.Instrumentalist">
+         <property name="song" value="Jingle Bells" />
+         <property name="age" value="25" />
+         <property name="instrument" ref="sax"/>
+    </bean>
+    
+    <aop:config proxy-target-class="true">
+        <aop:aspect ref="audience">
+            <aop:pointcut id="performance" expression="execution(* com.spring.test.action1.Performer.perform(..))"/>
+            
+            <aop:before pointcut-ref="performance" method="takeSeats"/>
+            <aop:before pointcut-ref="performance" method="turnOffCellPhones"/>
+            <aop:after-returning pointcut-ref="performance" method="applaud"/>
+            <aop:after-throwing pointcut-ref="performance" method="demandRefund"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>
